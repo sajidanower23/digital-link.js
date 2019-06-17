@@ -184,14 +184,15 @@ const DigitalLink = (opts) => {
   result.isValid = () => validateUrl(result.toWebUriString());
   result.getValidationTrace = () => getTrace(result.toWebUriString());
 
+  // Only supports GTIN-13
   result.mapToGS1Urn = () => {
     if (result[model].identifier['gtin']) {
       const gtinVal = result[model].identifier['gtin'];
       var pfix = gtinVal.substring(0, 7);
-      var ir = gtinVal.substring(9, 12);
+      var ir = gtinVal.substring(7, 12);
       var sn = result.getKeyQualifier('ser');
       if(pfix && ir && sn) {
-        return "urn:epc:id:sgtin:" + pfix + "." + ir + "." + sn;
+        return "urn:epc:id:sgtin:" + pfix + ".0" + ir + "." + sn;
       }
       return null;
     } else if (result[model].identifier['giai']) {
