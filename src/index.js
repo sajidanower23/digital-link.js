@@ -172,7 +172,6 @@ const DigitalLink = (opts) => {
     assignStringPair(result[model], 'attributes', key, value);
     return result;
   };
-
   result.getDomain = () => result[model].domain;
   result.getIdentifier = () => result[model].identifier;
   result.getKeyQualifier = key => result[model].keyQualifiers[key];
@@ -184,6 +183,28 @@ const DigitalLink = (opts) => {
   result.toJsonString = () => JSON.stringify(result[model]);
   result.isValid = () => validateUrl(result.toWebUriString());
   result.getValidationTrace = () => getTrace(result.toWebUriString());
+
+  result.mapToGS1Urn = () => {
+    if (result[model].identifier['gtin']) {
+      const gtinVal = result[model].identifier['gtin'];
+      var pfix = gtinVal.substring(0, 7);
+      var ir = gtinVal.substring(9, 12);
+      var sn = result.getKeyQualifier('ser');
+      if(pfix && ir && sn) {
+        return "urn:epc:id:sgtin:" + pfix + "." + ir + "." + sn;
+      }
+      return null;
+    } else if (result[model].identifier['giai']) {
+      const gtinVal = result[model].identifier['giai'];
+      var pfix = gtinVal.substring(0, 7);
+      var sn = result.getAttribute('7023'); // 7023 is the key for GIAI item reference
+      if(pfix && sn) {
+        return "urn:epc:id:giai: " + pfix + "." + sn;
+      }
+      return null;
+    }
+    return null;
+  }
 
   return result;
 };
