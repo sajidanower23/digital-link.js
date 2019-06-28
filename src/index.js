@@ -172,7 +172,6 @@ const DigitalLink = (opts) => {
     assignStringPair(result[model], 'attributes', key, value);
     return result;
   };
-
   result.getDomain = () => result[model].domain;
   result.getIdentifier = () => result[model].identifier;
   result.getKeyQualifier = key => result[model].keyQualifiers[key];
@@ -185,6 +184,36 @@ const DigitalLink = (opts) => {
   result.isValid = () => validateUrl(result.toWebUriString());
   result.getValidationTrace = () => getTrace(result.toWebUriString());
 
+  // Only supports GTIN-13
+  result.mapToGS1Urn = () => {
+    if (result[model].identifier['gtin']) {
+      const gtinVal = result[model].identifier['gtin'];
+      const pfix = gtinVal.substring(0, 7);
+      const ir = gtinVal.substring(7, 12);
+      const sn = result.getKeyQualifier('ser');
+      if(pfix && ir && sn) {
+        return "urn:epc:id:sgtin:" + pfix + ".0" + ir + "." + sn;
+      }
+      return null;
+    } else if (result[model].identifier['giai']) {
+      const gtinVal = result[model].identifier['giai'];
+      const pfix = gtinVal.substring(0, 7);
+      const sn = gtinVal.substring(7, 12);
+      if(pfix && sn) {
+        return "urn:epc:id:giai:" + pfix + "." + sn;
+      }
+      return null;
+    } else if (result[model].identifier['sscc']) {
+      const gtinVal = result[model].identifier['sscc'];
+      const pfix = gtinVal.substring(0, 7);
+      const sn = gtinVal.substring(7, 17);
+      if(pfix && sn) {
+        return "urn:epc:id:sscc:" + pfix + "." + sn;
+      }
+      return null;
+    }
+    return null;
+  }
   return result;
 };
 
