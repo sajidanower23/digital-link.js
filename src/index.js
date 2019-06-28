@@ -188,25 +188,25 @@ const DigitalLink = (opts) => {
   result.mapToGS1Urn = () => {
     if (result[model].identifier['gtin']) {
       const gtinVal = result[model].identifier['gtin'];
-      var pfix = gtinVal.substring(0, 7);
-      var ir = gtinVal.substring(7, 12);
-      var sn = result.getKeyQualifier('ser');
+      const pfix = gtinVal.substring(0, 7);
+      const ir = gtinVal.substring(7, 12);
+      const sn = result.getKeyQualifier('ser');
       if(pfix && ir && sn) {
         return "urn:epc:id:sgtin:" + pfix + ".0" + ir + "." + sn;
       }
       return null;
     } else if (result[model].identifier['giai']) {
       const gtinVal = result[model].identifier['giai'];
-      var pfix = gtinVal.substring(0, 7);
-      var sn = gtinVal.substring(7, 12);
+      const pfix = gtinVal.substring(0, 7);
+      const sn = gtinVal.substring(7, 12);
       if(pfix && sn) {
         return "urn:epc:id:giai:" + pfix + "." + sn;
       }
       return null;
     } else if (result[model].identifier['sscc']) {
       const gtinVal = result[model].identifier['sscc'];
-      var pfix = gtinVal.substring(0, 7);
-      var ir = gtinVal.substring(7, 12);
+      const pfix = gtinVal.substring(0, 7);
+      const sn = gtinVal.substring(7, 17);
       if(pfix && sn) {
         return "urn:epc:id:sscc:" + pfix + "." + sn;
       }
