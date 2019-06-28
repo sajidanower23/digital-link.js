@@ -198,15 +198,22 @@ const DigitalLink = (opts) => {
     } else if (result[model].identifier['giai']) {
       const gtinVal = result[model].identifier['giai'];
       var pfix = gtinVal.substring(0, 7);
-      var sn = result.getAttribute('7023'); // 7023 is the key for GIAI item reference
+      var sn = gtinVal.substring(7, 12);
       if(pfix && sn) {
-        return "urn:epc:id:giai: " + pfix + "." + sn;
+        return "urn:epc:id:giai:" + pfix + "." + sn;
+      }
+      return null;
+    } else if (result[model].identifier['sscc']) {
+      const gtinVal = result[model].identifier['sscc'];
+      var pfix = gtinVal.substring(0, 7);
+      var ir = gtinVal.substring(7, 12);
+      if(pfix && sn) {
+        return "urn:epc:id:sscc:" + pfix + "." + sn;
       }
       return null;
     }
     return null;
   }
-
   return result;
 };
 
